@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, json
 app = Flask(__name__)
 
 @app.route("/")
@@ -7,22 +7,30 @@ def hello():
 
 @app.route("/status")
 def status():
-    response = {}
-    response['status'] = 200
-    response['data'] = {
-        'result': 'OK - healthy'
-    } 
-    return jsonify(response)
+    response = app.response_class(
+        response  = json.dumps({'result' : 'OK - healthy'}),
+        status = 200,
+        mimetype = 'application/json'
+    )
+    
+    return response
 
 @app.route("/metrics")
 def metrics():
-    response = {}
-    response['status'] = 200
-    response['data'] = {
-        'UserCount': 140,
-        'UserCountActive': 23
-    } 
-    return jsonify(response)
+    response = app.response_class(
+        response = json.dumps({
+            'status' : 'success',
+            'code' : 0,
+            'data' : {
+                'UserCount' : 140,
+                'UserCountActive' : 23
+            }, 
+        }),
+        status = 200,
+        mimetype = 'application/json'
+    )
+    
+    return response
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
